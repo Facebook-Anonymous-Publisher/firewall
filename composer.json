@@ -12,6 +12,9 @@
   "require": {
     "php": ">=5.6",
     "geoip2/geoip2": "^2.4",
+    "illuminate/contracts": "^5.3",
+    "illuminate/database": "^5.3",
+    "illuminate/support": "^5.3",
     "vectorface/whip": "^0.3"
   },
   "require-dev": {
