@@ -18,6 +18,12 @@ Install using composer
 composer require facebook-anonymous-publisher/firewall
 ```
 
+Add the service provider in `config/app.php`
+
+```php
+FacebookAnonymousPublisher\Firewall\FirewallServiceProvider::class,
+```
+
 ## CHANGELOG
 
 Please see [CHANGELOG](CHANGELOG.md) for details.
