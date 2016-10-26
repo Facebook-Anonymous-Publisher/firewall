@@ -18,7 +18,7 @@ class Firewall extends Model
      *
      * @var string
      */
-    protected $keyType = 'binary';
+    protected $keyType = 'string';
 
     /**
      * Indicates if the IDs are auto-incrementing.
@@ -26,6 +26,13 @@ class Firewall extends Model
      * @var bool
      */
     public $incrementing = false;
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = ['ip'];
 
     /**
      * Get the ip address.

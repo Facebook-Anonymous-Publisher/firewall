@@ -113,8 +113,12 @@ class Firewall
      *
      * @return bool
      */
-    public function isAllowCountry($codes = [])
+    public function isAllowCountry($codes = ['*'])
     {
+        if (in_array('*', $codes, true)) {
+            return true;
+        }
+
         try {
             $isoCode = $this->reader
                 ->country($this->ip())
@@ -156,6 +160,16 @@ class Firewall
             $ip = $this->ip();
         }
 
-        return $this->model->destroy($ip);
+        return $this->model->destroy(inet_pton($ip));
+    }
+
+    /**
+     * Unban all ip addresses.
+     *
+     * @return bool|null
+     */
+    public function unbanAll()
+    {
+        return $this->model->truncate();
     }
 }
