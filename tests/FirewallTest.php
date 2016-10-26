@@ -72,21 +72,21 @@ class FirewallTest extends Base
 
         $this->firewall->ban();
 
-        $this->assertTrue($this->model->where('ip', inet_pton('140.109.1.1'))->exists());
+        $this->assertTrue($this->model->where('ip', base64_encode(inet_pton('140.109.1.1')))->exists());
 
         $this->firewall->ban('140.109.1.2');
 
-        $this->assertTrue($this->model->where('ip', inet_pton('140.109.1.2'))->exists());
+        $this->assertTrue($this->model->where('ip', base64_encode(inet_pton('140.109.1.2')))->exists());
 
         $this->assertCount(2, $this->model->all());
 
         $this->firewall->unban();
 
-        $this->assertFalse($this->model->where('ip', inet_pton('140.109.1.1'))->exists());
+        $this->assertFalse($this->model->where('ip', base64_encode(inet_pton('140.109.1.1')))->exists());
 
         $this->firewall->unban('140.109.1.2');
 
-        $this->assertFalse($this->model->where('ip', inet_pton('140.109.1.2'))->exists());
+        $this->assertFalse($this->model->where('ip', base64_encode(inet_pton('140.109.1.2')))->exists());
 
         $this->assertCount(0, $this->model->all());
     }

@@ -160,7 +160,7 @@ class Firewall
             $ip = $this->ip();
         }
 
-        return $this->model->destroy(inet_pton($ip));
+        return $this->model->destroy(base64_encode(inet_pton($ip)));
     }
 
     /**

@@ -14,7 +14,7 @@ class CreateFirewallsTable extends Migration
     public function up()
     {
         Schema::create('firewalls', function (Blueprint $table) {
-            $table->binary('ip')->primary();
+            $table->string('ip', 24)->primary();
             $table->timestamps();
         });
     }

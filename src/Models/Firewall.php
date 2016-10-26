@@ -43,7 +43,7 @@ class Firewall extends Model
      */
     public function getIpAttribute($value)
     {
-        return inet_ntop($value);
+        return inet_ntop(base64_decode($value, true));
     }
 
     /**
@@ -55,6 +55,6 @@ class Firewall extends Model
      */
     public function setIpAttribute($value)
     {
-        $this->attributes['ip'] = inet_pton($value);
+        $this->attributes['ip'] = base64_encode(inet_pton($value));
     }
 }
