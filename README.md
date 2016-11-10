@@ -24,6 +24,12 @@ Add the service provider in `config/app.php`
 FacebookAnonymousPublisher\Firewall\FirewallServiceProvider::class,
 ```
 
+Run the database migrations
+
+```bash
+php artisan migrate
+```
+
 ## CHANGELOG
 
 Please see [CHANGELOG](CHANGELOG.md) for details.
