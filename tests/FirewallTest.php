@@ -34,11 +34,13 @@ class FirewallTest extends Base
         $this->assertSame('140.109.1.2', $this->firewall->ip());
     }
 
-    public function test_is_banned()
+    public function test_is_banned_1()
     {
         $this->firewall->ban('140.109.1.1');
         $this->firewall->ban('140.109.1.2');
         $this->firewall->ban('140.109.1.3');
+
+        session()->forget('isBan');
 
         $_SERVER['REMOTE_ADDR'] = '140.109.1.2';
 
@@ -47,6 +49,19 @@ class FirewallTest extends Base
         $_SERVER['REMOTE_ADDR'] = '140.109.1.4';
 
         $this->assertFalse($this->firewall->isBanned());
+    }
+
+    public function test_is_banned_2()
+    {
+        $this->firewall->ban('140.109.1.1');
+
+        $_SERVER['REMOTE_ADDR'] = '140.109.1.2';
+
+        $this->assertTrue($this->firewall->isBanned());
+
+        $_SERVER['REMOTE_ADDR'] = '140.109.1.3';
+
+        $this->assertTrue($this->firewall->isBanned());
     }
 
     public function test_is_allow_country()
