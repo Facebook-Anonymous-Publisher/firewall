@@ -14,6 +14,11 @@ class ModifyIpColumnLengthOnFirewallsTable extends Migration
     public function up()
     {
         Schema::table('firewalls', function (Blueprint $table) {
+            Schema::getConnection()
+                ->getDoctrineSchemaManager()
+                ->getDatabasePlatform()
+                ->registerDoctrineTypeMapping('enum', 'string');
+
             $table->string('ip', 50)->change();
         });
     }
