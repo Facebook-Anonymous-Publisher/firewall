@@ -4,7 +4,7 @@
 
 ## 1.x
 
-- 1.0.3
+- 1.0.3 (2016-11-11)
   - Add banned type
   - Add segment ban
 

@@ -33,3 +33,7 @@ php artisan migrate
 ## CHANGELOG
 
 Please see [CHANGELOG](CHANGELOG.md) for details.
+
+## UPGRADE
+
+Please see [UPGRADE](UPGRADE.md) for details.
