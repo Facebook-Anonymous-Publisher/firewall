@@ -79,6 +79,32 @@ class FirewallTest extends Base
         $this->firewall->ban('140.109.1.2', 'apple');
     }
 
+    public function test_is_banned_use_segment()
+    {
+        $this->firewall->ban('2001:db8::/127', 'segment');
+        $this->firewall->ban('140.109.0.0/16', 'segment');
+
+        $_SERVER['REMOTE_ADDR'] = '140.109.50.22';
+
+        $this->assertSame('segment', $this->firewall->isBanned());
+
+        $_SERVER['REMOTE_ADDR'] = '140.109.1.1';
+
+        $this->assertSame('segment', $this->firewall->isBanned());
+
+        $_SERVER['REMOTE_ADDR'] = '140.110.1.1';
+
+        $this->assertFalse($this->firewall->isBanned());
+
+        $_SERVER['REMOTE_ADDR'] = '2001:db8:0000:0000:0000:0000:0000:0001';
+
+        $this->assertSame('segment', $this->firewall->isBanned());
+
+        $_SERVER['REMOTE_ADDR'] = '2001:db8:0000:0000:0000:0000:0000:0005';
+
+        $this->assertFalse($this->firewall->isBanned());
+    }
+
     public function test_is_allow_country()
     {
         $this->assertTrue($this->firewall->isAllowCountry());
@@ -102,21 +128,21 @@ class FirewallTest extends Base
 
         $this->firewall->ban();
 
-        $this->assertTrue($this->model->where('ip', $this->encodeIp('140.109.1.1'))->exists());
+        $this->assertTrue($this->model->where('ip', '140.109.1.1')->exists());
 
         $this->firewall->ban('140.109.1.2');
 
-        $this->assertTrue($this->model->where('ip', $this->encodeIp('140.109.1.2'))->exists());
+        $this->assertTrue($this->model->where('ip', '140.109.1.2')->exists());
 
         $this->assertCount(2, $this->model->all());
 
         $this->firewall->unban();
 
-        $this->assertFalse($this->model->where('ip', $this->encodeIp('140.109.1.1'))->exists());
+        $this->assertFalse($this->model->where('ip', '140.109.1.1')->exists());
 
         $this->firewall->unban('140.109.1.2');
 
-        $this->assertFalse($this->model->where('ip', $this->encodeIp('140.109.1.2'))->exists());
+        $this->assertFalse($this->model->where('ip', '140.109.1.2')->exists());
 
         $this->assertCount(0, $this->model->all());
     }
@@ -136,17 +162,5 @@ class FirewallTest extends Base
         $this->firewall->unbanAll();
 
         $this->assertCount(0, $this->model->all());
-    }
-
-    public function test_mutators()
-    {
-        $this->firewall->ban('140.109.1.1');
-
-        $this->assertSame('140.109.1.1', $this->model->first()->getAttribute('ip'));
-    }
-
-    protected function encodeIp($ip)
-    {
-        return base64_encode(inet_pton($ip));
     }
 }

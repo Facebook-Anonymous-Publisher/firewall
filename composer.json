@@ -16,6 +16,7 @@
     "illuminate/database": "^5.3",
     "illuminate/session": "^5.3",
     "illuminate/support": "^5.3",
+    "s1lentium/iptools": "^1.1",
     "vectorface/whip": "^0.3"
   },
   "require-dev": {

@@ -41,11 +41,32 @@ class Firewall
         }
 
         $banned = $this->model
-            ->where('ip', Utility::encodeIp($this->ip()))
+            ->where('ip', $this->ip())
             ->whereIn('type', ['regular', 'permanent'])
             ->first(['ip', 'type']);
 
-        return is_null($banned) ? false : $banned->getAttribute('type');
+        if (! is_null($banned)) {
+            return $banned->getAttribute('type');
+        }
+
+        return $this->isSegmentBanned();
+    }
+
+    /**
+     * Determine the request ip address is banned or not.
+     *
+     * @return bool|string
+     */
+    protected function isSegmentBanned()
+    {
+        $banned = $this->model
+            ->where('type', 'segment')
+            ->get()
+            ->contains(function ($cidr) {
+                return Utility::contains($cidr->getAttribute('ip'), $this->ip());
+            });
+
+        return $banned ? 'segment' : false;
     }
 
     /**
@@ -77,13 +98,17 @@ class Firewall
     {
         $this->validateType($type);
 
-        if (is_null($ip)) {
+        if (! is_null($ip)) {
+            if ('segment' === $type) {
+                $ip = Utility::cidr($ip);
+            }
+        } else {
             $ip = $this->ip();
 
             session(['isBan' => $type]);
         }
 
-        return $this->firstOrCreate($ip, $type);
+        return $this->model->firstOrCreate(compact('ip'), compact('type'));
     }
 
     /**
@@ -96,27 +121,6 @@ class Firewall
         if (! in_array($type, ['regular', 'permanent', 'segment'], true)) {
             throw new \InvalidArgumentException;
         }
-    }
-
-    /**
-     * Get the first record matching the attributes or create it.
-     *
-     * @param string $ip
-     * @param string $type
-     *
-     * @return Models\Firewall
-     */
-    protected function firstOrCreate($ip, $type)
-    {
-        $instance = $this->model
-            ->where('ip', Utility::encodeIp($ip))
-            ->first(['ip', 'type']);
-
-        if (is_null($instance)) {
-            $instance = $this->model->create(compact('ip', 'type'));
-        }
-
-        return $instance;
     }
 
     /**
@@ -134,7 +138,7 @@ class Firewall
             session()->forget('isBan');
         }
 
-        return $this->model->destroy(Utility::encodeIp($ip));
+        return $this->model->destroy($ip);
     }
 
     /**

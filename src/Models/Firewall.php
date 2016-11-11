@@ -33,28 +33,4 @@ class Firewall extends Model
      * @var array
      */
     protected $fillable = ['ip', 'type'];
-
-    /**
-     * Get the ip address.
-     *
-     * @param string $value
-     *
-     * @return string
-     */
-    public function getIpAttribute($value)
-    {
-        return inet_ntop(base64_decode($value, true));
-    }
-
-    /**
-     * Set the ip address.
-     *
-     * @param string $value
-     *
-     * @return void
-     */
-    public function setIpAttribute($value)
-    {
-        $this->attributes['ip'] = base64_encode(inet_pton($value));
-    }
 }

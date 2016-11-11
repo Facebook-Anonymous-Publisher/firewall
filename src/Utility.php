@@ -3,6 +3,9 @@
 namespace FacebookAnonymousPublisher\Firewall;
 
 use GeoIp2\Database\Reader;
+use IPTools\IP;
+use IPTools\Network;
+use IPTools\Range;
 use Vectorface\Whip\Whip;
 
 class Utility
@@ -81,14 +84,35 @@ class Utility
     }
 
     /**
-     * Encode ip address.
+     * Get CIDR.
      *
      * @param string $ip
      *
      * @return string
      */
-    public static function encodeIp($ip)
+    public static function cidr($ip)
     {
-        return base64_encode(inet_pton($ip));
+        return Network::parse($ip)->getCIDR();
+    }
+
+    /**
+     * Check if ip is within range.
+     *
+     * @param string $cidr
+     * @param string $ip
+     *
+     * @return bool
+     */
+    public static function contains($cidr, $ip)
+    {
+        $cidr = Range::parse($cidr);
+
+        $ip = new IP($ip);
+
+        if ($cidr->getFirstIP()->getVersion() !== $ip->getVersion()) {
+            return false;
+        }
+
+        return $cidr->contains($ip);
     }
 }
