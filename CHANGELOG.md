@@ -4,6 +4,9 @@
 
 ## 1.x
 
+- 1.0.3
+  - Add banned type
+
 - 1.0.2 (2016-11-10)
   - Add isBan flag
 

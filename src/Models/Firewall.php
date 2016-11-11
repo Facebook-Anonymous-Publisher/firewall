@@ -32,7 +32,7 @@ class Firewall extends Model
      *
      * @var array
      */
-    protected $fillable = ['ip'];
+    protected $fillable = ['ip', 'type'];
 
     /**
      * Get the ip address.

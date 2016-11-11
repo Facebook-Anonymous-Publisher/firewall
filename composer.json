@@ -11,6 +11,7 @@
   ],
   "require": {
     "php": ">=5.6",
+    "doctrine/dbal": "^2.5",
     "geoip2/geoip2": "^2.4",
     "illuminate/database": "^5.3",
     "illuminate/session": "^5.3",
